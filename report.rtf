@@ -8,7 +8,7 @@
 \par \cf3                0            50400         64             6           2 
 \par \pard\qc\cf2\b\fs30 
 \par Bloques no ejecutables
-\par \pard\cf3\b0\fs20  TGENTECOLASCAJA\tab\tab TABLE\tab\tab Q$COLAS,1,1,20
+\par \pard\cf3\b0\fs20  TGENTECOLASCAJA\tab\tab TABLE\tab\tab Q$CAJAS,1,1,20
 \par TTIEMPOSIST\tab\tab TABLE\tab\tab M1,180,180,30\tab 
 \par TTIEMPOCOLAATENC\tab QTABLE\tab ATENC,5,60,30
 \par TGENTECOLASCAJA1\tab TABLE\tab\tab Q1,1,1,20\tab ; PARA TESTING
@@ -80,28 +80,28 @@
 \par     42          40  RELEASE         *CAJA                           1074              0      0
 \par     43         FIN  TABULATE        TTIEMPOSIST                     1503              0      0
 \par     44          42  TERMINATE                                       1503              0      0
-\par     76          43  GENERATE        ,,5400,1                           1              0      0
-\par     77          44  SAVEVALUE       MED1,60                            1              0      0
-\par     78          45  SAVEVALUE       CANTCAJAS,3                        1              0      0
-\par     79          46  ADVANCE         7200,0                             1              0      0
-\par     80          47  SAVEVALUE       MED1,45                            1              0      0
-\par     81          48  SAVEVALUE       MED2,75                            1              0      0
-\par     82          49  SAVEVALUE       CANTCAJAS,4                        1              0      0
-\par     83          50  ADVANCE         5400,0                             1              0      0
-\par     84          51  SAVEVALUE       MED1,40                            1              0      0
-\par     85          52  SAVEVALUE       MED2,45                            1              0      0
-\par     86          53  SAVEVALUE       CANTCAJAS,5                        1              0      0
-\par     87          54  TERMINATE                                          1              0      0
-\par     90          55  GENERATE        120,0,7200                       360              0      0
-\par     91          56  TABULATE        TGENTECOLASCAJA                  360              0      0
-\par     93          57  TABULATE        TGENTECOLASCAJA1                 360              0      0
-\par     94          58  TABULATE        TGENTECOLASCAJA2                 360              0      0
-\par     95          59  TABULATE        TGENTECOLASCAJA3                 360              0      0
-\par     96          60  TABULATE        TGENTECOLASCAJA4                 360              0      0
-\par     97          61  TABULATE        TGENTECOLASCAJA5                 360              0      0
-\par     99          62  TERMINATE                                        360              0      0
-\par    101          63  GENERATE        3600,0                            14              0      0
-\par    102          64  TERMINATE       1                                 14              0      0
+\par     74          43  GENERATE        ,,5400,1                           1              0      0
+\par     75          44  SAVEVALUE       MED1,60                            1              0      0
+\par     76          45  SAVEVALUE       CANTCAJAS,3                        1              0      0
+\par     77          46  ADVANCE         7200,0                             1              0      0
+\par     78          47  SAVEVALUE       MED1,45                            1              0      0
+\par     79          48  SAVEVALUE       MED2,75                            1              0      0
+\par     80          49  SAVEVALUE       CANTCAJAS,4                        1              0      0
+\par     81          50  ADVANCE         5400,0                             1              0      0
+\par     82          51  SAVEVALUE       MED1,40                            1              0      0
+\par     83          52  SAVEVALUE       MED2,45                            1              0      0
+\par     84          53  SAVEVALUE       CANTCAJAS,5                        1              0      0
+\par     85          54  TERMINATE                                          1              0      0
+\par     87          55  GENERATE        120,0,7200                       360              0      0
+\par     88          56  TABULATE        TGENTECOLASCAJA                  360              0      0
+\par     89          57  TABULATE        TGENTECOLASCAJA1                 360              0      0
+\par     90          58  TABULATE        TGENTECOLASCAJA2                 360              0      0
+\par     91          59  TABULATE        TGENTECOLASCAJA3                 360              0      0
+\par     92          60  TABULATE        TGENTECOLASCAJA4                 360              0      0
+\par     93          61  TABULATE        TGENTECOLASCAJA5                 360              0      0
+\par     94          62  TERMINATE                                        360              0      0
+\par     96          63  GENERATE        3600,0                            14              0      0
+\par     97          64  TERMINATE       1                                 14              0      0
 \par \pard\qc\cf2\b\fs30 
 \par Facilities
 \par 
@@ -150,18 +150,20 @@
 \par         CANTIDAD DE VALORES TABULADOS :          1977
 \par         VALOR MAXIMO TABULADO         :         4,000
 \par 
-\par \cf4 TGENTECOLASCAJA     TABLE            Q$COLAS,1,1,20
+\par \cf4 TGENTECOLASCAJA     TABLE            Q$CAJAS,1,1,20
 \par 
-\par \cf3                MEDIA                         :          0,000
-\par                DESVIACION ESTANDAR           :          0,000
+\par \cf3                MEDIA                         :          0,069
+\par                DESVIACION ESTANDAR           :          0,313
 \par                CANTIDAD EN RETRY             :              0
 \par 
 \par \cf2           INTERVALO       FRECUENCIA           %     %ACUMULADO    %REMANENTE
-\par \cf3          0  -         1          360     100,000        100,000         0,000
-\par             Las frecuencias restantes (19) son todas cero.
+\par \cf3          0  -         1          356      98,889         98,889         1,111
+\par          2  -         2            3       0,833         99,722         0,278
+\par          3  -         3            1       0,278        100,000         0,000
+\par             Las frecuencias restantes (17) son todas cero.
 \par 
 \par         CANTIDAD DE VALORES TABULADOS :           360
-\par         VALOR MAXIMO TABULADO         :         0,000
+\par         VALOR MAXIMO TABULADO         :         3,000
 \par 
 \par \cf4 TGENTECOLASCAJA1    TABLE            Q1,1,1,20
 \par 
