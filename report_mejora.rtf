@@ -5,7 +5,7 @@
 \par Informaci\'f3n general
 \par 
 \par \pard\b0\fs20       START_TIME         END_TIME     BLOCKS    FACILITIES    STORAGES
-\par \cf3                0            25200         63             3           3 
+\par \cf3                0            25200         64             3           3 
 \par \pard\qc\cf2\b\fs30 
 \par Bloques no ejecutables
 \par \pard\cf3\b0\fs20  TGENTECOLASCAJA\tab\tab TABLE\tab\tab Q$CAJAS,1,1,20
@@ -53,80 +53,81 @@
 \par     12          12  ADVANCE         30,15                            766              1      0
 \par     13          13  LEAVE           ATENC                            765              0      0
 \par     15          14  TRANSFER        FN$PCENTSEVA,,FIN                765              0      0
-\par     17          15  TEST        LE  *TIPO,2,AVTAS                    525              0      0
-\par     18  ASVTECNICO  ADVANCE         45,15                            282              3      0
-\par     19          17  QUEUE           ATENCSERVTEC                     279             19      0
-\par     20          18  ENTER           ATENCSERVTEC                     260              0      0
-\par     21          19  DEPART          ATENCSERVTEC                     260              0      0
-\par     22          20  ADVANCE         FN$MEDIADEMORA,*DESV             260              5      0
-\par     23          21  LEAVE           ATENCSERVTEC                     255              0      0
-\par     24          22  TRANSFER        ,ACAJAS                          255              0      0
-\par     25       AVTAS  ADVANCE         60,30                            243              1      0
-\par     26          24  QUEUE           ATENCPROMVTAS                    242             18      0
-\par     27          25  ENTER           ATENCPROMVTAS                    224              0      0
-\par     28          26  DEPART          ATENCPROMVTAS                    224              0      0
-\par     29          27  ADVANCE         FN$MEDIADEMORA,*DESV             224              6      0
-\par     30          28  LEAVE           ATENCPROMVTAS                    218              0      0
-\par     31          29  TRANSFER        ,ACAJAS                          218              0      0
-\par     32      ACAJAS  ADVANCE         45,15                            473              0      0
-\par     33          31  SELECT      NU  CAJA,1,X$CANTCAJAS,,,OCUP         473              0      0
-\par     34          32  TRANSFER        ,ACOLACAJAS                      218              0      0
+\par     17          15  TEST        LE  *TIPO,2,AVTAS                    532              0      0
+\par     18  ASVTECNICO  ADVANCE         45,15                            292              2      0
+\par     19          17  QUEUE           ATENCSERVTEC                     290             26      0
+\par     20          18  ENTER           ATENCSERVTEC                     264              0      0
+\par     21          19  DEPART          ATENCSERVTEC                     264              0      0
+\par     22          20  ADVANCE         FN$MEDIADEMORA,*DESV             264              5      0
+\par     23          21  LEAVE           ATENCSERVTEC                     259              0      0
+\par     24          22  TRANSFER        ,ACAJAS                          259              0      0
+\par     25       AVTAS  ADVANCE         60,30                            240              1      0
+\par     26          24  QUEUE           ATENCPROMVTAS                    239             13      0
+\par     27          25  ENTER           ATENCPROMVTAS                    226              0      0
+\par     28          26  DEPART          ATENCPROMVTAS                    226              0      0
+\par     29          27  ADVANCE         FN$MEDIADEMORA,*DESV             226              6      0
+\par     30          28  LEAVE           ATENCPROMVTAS                    220              0      0
+\par     31          29  TRANSFER        ,ACAJAS                          220              0      0
+\par     32      ACAJAS  ADVANCE         45,15                            479              0      0
+\par     33          31  SELECT      NU  CAJA,1,X$CANTCAJAS,,,OCUP         479              0      0
+\par     34          32  TRANSFER        ,ACOLACAJAS                      224              0      0
 \par     35        OCUP  SELECT      MIN CAJA,1,X$CANTCAJAS,,Q            255              0      0
-\par     36  ACOLACAJAS  QUEUE           CAJAS                            473              0      0
-\par     37          35  QUEUE           *CAJA                            473              1      0
-\par     38          36  SEIZE           *CAJA                            472              0      0
-\par     39          37  DEPART          *CAJA                            472              0      0
-\par     40          38  DEPART          CAJAS                            472              0      0
-\par     41          39  ADVANCE         90,45                            472              1      0
-\par     42          40  RELEASE         *CAJA                            471              0      0
-\par     43         FIN  TABULATE        TTIEMPOSIST                      711              0      0
-\par     44          42  TERMINATE                                        711              0      0
-\par     75          43  GENERATE        ,,5400,1                           1              0      0
-\par     76          44  SAVEVALUE       MED1,60                            1              0      0
-\par     77          45  SAVEVALUE       CANTCAJAS,2                        1              0      0
-\par     78          46  ADVANCE         7200,0                             1              0      0
-\par     79          47  SAVEVALUE       MED1,45                            1              0      0
-\par     80          48  SAVEVALUE       MED2,75                            1              0      0
-\par     81          49  SAVEVALUE       CANTCAJAS,3                        1              0      0
+\par     36  ACOLACAJAS  QUEUE           CAJAS                            479              0      0
+\par     37          35  QUEUE           *CAJA                            479             28      0
+\par     38          36  SEIZE           *CAJA                            451              0      0
+\par     39          37  DEPART          *CAJA                            451              0      0
+\par     40          38  DEPART          CAJAS                            451              0      0
+\par     41          39  ADVANCE         90,45                            451              2      0
+\par     42          40  RELEASE         *CAJA                            449              0      0
+\par     43         FIN  TABULATE        TTIEMPOSIST                      682              0      0
+\par     44          42  TERMINATE                                        682              0      0
+\par     75          43  GENERATE        ,,900,1                            1              0      0
+\par     76          44  SAVEVALUE       CANTCAJAS,3                        1              0      0
+\par     77          45  ADVANCE         4500,0                             1              0      0
+\par     78          46  SAVEVALUE       MED1,60                            1              0      0
+\par     79          47  ADVANCE         7200,0                             1              0      0
+\par     80          48  SAVEVALUE       MED1,45                            1              0      0
+\par     81          49  SAVEVALUE       MED2,75                            1              0      0
 \par     82          50  ADVANCE         5400,0                             1              0      0
-\par     83          51  SAVEVALUE       MED1,40                            1              0      0
-\par     84          52  SAVEVALUE       MED2,45                            1              0      0
-\par     85          53  TERMINATE                                          1              0      0
-\par     87          54  GENERATE        120,0,7200                       150              0      0
-\par     88          55  TABULATE        TGENTECOLASCAJA                  150              0      0
-\par     89          56  TABULATE        TGENTECOLASCAJA1                 150              0      0
-\par     90          57  TABULATE        TGENTECOLASCAJA2                 150              0      0
-\par     91          58  TABULATE        TGENTECOLASCAJA3                 150              0      0
-\par     92          59  TABULATE        TGENTECOLASCAJA4                 150              0      0
-\par     93          60  TABULATE        TGENTECOLASCAJA5                 150              0      0
-\par     94          61  TERMINATE                                        150              0      0
-\par     96          62  GENERATE        3600,0                             7              0      0
-\par     97          63  TERMINATE       1                                  7              0      0
+\par     83          51  SAVEVALUE       CANTCAJAS,2                        1              0      0
+\par     84          52  SAVEVALUE       MED1,40                            1              0      0
+\par     85          53  SAVEVALUE       MED2,45                            1              0      0
+\par     86          54  TERMINATE                                          1              0      0
+\par     88          55  GENERATE        120,0,7200                       150              0      0
+\par     89          56  TABULATE        TGENTECOLASCAJA                  150              0      0
+\par     90          57  TABULATE        TGENTECOLASCAJA1                 150              0      0
+\par     91          58  TABULATE        TGENTECOLASCAJA2                 150              0      0
+\par     92          59  TABULATE        TGENTECOLASCAJA3                 150              0      0
+\par     93          60  TABULATE        TGENTECOLASCAJA4                 150              0      0
+\par     94          61  TABULATE        TGENTECOLASCAJA5                 150              0      0
+\par     95          62  TERMINATE                                        150              0      0
+\par     97          63  GENERATE        3600,0                             7              0      0
+\par     98          64  TERMINATE       1                                  7              0      0
 \par \pard\qc\cf2\b\fs30 
 \par Facilities
 \par 
 \par \pard\b0\fs20  FACILITY          ENTRIES    UTIL.  AVE_TIME  AVAILABLE   OWNER   PEND   INTER   RETRY   DELAY
-\par \cf3               1        220    0,803    92,000          1      37      0       0       0       1
-\par               2        168    0,591    88,690          1       0      0       0       0       0
-\par               3         84    0,285    85,369          1       0      0       0       0       0
+\par \cf3               1        218    0,778    89,913          1      53      0       0       0      14
+\par               2        171    0,625    92,175          1      51      0       0       0      14
+\par               3         62    0,227    92,339          1       0      0       0       0       0
 \par \pard\qc\cf2\b\fs30 
 \par Queues
 \par 
 \par \pard\b0\fs20  QUEUE             MAX      CONT.  ENTRIES ENTRIES(0)  AVE.CONT.   AVE.TIME    AVE.(-0)   RETRY
-\par \cf3               1      4         1       221       69       0,517      58,977      85,750       0
-\par               2      3         0       168       84       0,262      39,327      78,655       0
-\par               3      2         0        84       65       0,041      12,369      54,684       0
-\par           ATENC     18         0       766      458       0,535      17,615      43,808       0
-\par   ATENCPROMVTAS     18        18       242       89       2,250     234,269     370,542       0
-\par    ATENCSERVTEC     19        19       279      108       1,918     173,208     282,602       0
-\par           CAJAS      7         1       473      218       0,821      43,721      81,098       0
+\par \cf3               1     14        14       232       93       2,112     229,384     382,856       0
+\par               2     14        14       185       78       1,917     261,081     451,402       0
+\par               3      1         0        62       53       0,014       5,742      39,556       0
+\par           ATENC     18         0       766      456       0,578      19,021      47,000       0
+\par   ATENCPROMVTAS     14        13       239       84       1,508     158,979     245,135       0
+\par    ATENCSERVTEC     26        26       290       88       3,525     306,334     439,787       0
+\par           CAJAS     28        28       479      224       4,043     212,678     399,502       0
 \par \pard\qc\cf2\b\fs30 
 \par Storages
 \par 
 \par \pard\b0\fs20  STORAGE           CAP.   REMAIN.   MIN.   MAX.  ENTRIES  AVL.   AVE.C.    UTIL.  RETRY   DELAY
-\par \cf3           ATENC       2        1       0      2      766     1    0,917    0,458      0       0
-\par   ATENCPROMVTAS       6        0       0      6      224     1    3,952    0,659      0      18
-\par    ATENCSERVTEC       5        0       0      5      260     1    3,530    0,706      0      19
+\par \cf3           ATENC       2        1       0      2      766     1    0,907    0,453      0       0
+\par   ATENCPROMVTAS       6        0       0      6      226     1    4,138    0,690      0      13
+\par    ATENCSERVTEC       5        0       0      5      264     1    3,655    0,731      0      26
 \par \pard\qc\cf2\b\fs30 
 \par Tables
 \par 
@@ -148,65 +149,101 @@
 \par 
 \par \cf4 TGENTECOLASCAJA     TABLE            Q$CAJAS,1,1,20
 \par 
-\par \cf3                MEDIA                         :          1,100
-\par                DESVIACION ESTANDAR           :          1,375
+\par \cf3                MEDIA                         :          5,580
+\par                DESVIACION ESTANDAR           :          8,089
 \par                CANTIDAD EN RETRY             :              0
 \par 
 \par \cf2           INTERVALO       FRECUENCIA           %     %ACUMULADO    %REMANENTE
-\par \cf3          0  -         1          105      70,000         70,000        30,000
-\par          2  -         2           25      16,667         86,667        13,333
-\par          3  -         3            7       4,667         91,333         8,667
-\par          4  -         4            8       5,333         96,667         3,333
-\par          5  -         5            4       2,667         99,333         0,667
-\par          6  -         6            1       0,667        100,000         0,000
-\par             Las frecuencias restantes (14) son todas cero.
+\par \cf3          0  -         1           83      55,333         55,333        44,667
+\par          2  -         2           10       6,667         62,000        38,000
+\par          3  -         3            1       0,667         62,667        37,333
+\par          4  -         4            6       4,000         66,667        33,333
+\par          5  -         5            2       1,333         68,000        32,000
+\par          6  -         6            2       1,333         69,333        30,667
+\par          7  -         7            2       1,333         70,667        29,333
+\par          8  -         8            2       1,333         72,000        28,000
+\par          9  -         9            2       1,333         73,333        26,667
+\par         10  -        10            4       2,667         76,000        24,000
+\par         11  -        11            5       3,333         79,333        20,667
+\par         12  -        12            3       2,000         81,333        18,667
+\par         13  -        13            2       1,333         82,667        17,333
+\par         14  -        14            2       1,333         84,000        16,000
+\par         15  -        15            1       0,667         84,667        15,333
+\par         16  -        16            1       0,667         85,333        14,667
+\par         17  -        17            1       0,667         86,000        14,000
+\par         18  -        18            1       0,667         86,667        13,333
+\par         19  -        19            2       1,333         88,000        12,000
+\par         20  -  Infinito           18      12,000        100,000         0,000
+\par 
+\par         MEDIA OVERFLOW                :        23,167
+\par         DESVIACION ESTANDAR OVERFLOW  :         2,503
 \par 
 \par         CANTIDAD DE VALORES TABULADOS :           150
-\par         VALOR MAXIMO TABULADO         :         6,000
+\par         VALOR MAXIMO TABULADO         :        27,000
 \par 
 \par \cf4 TGENTECOLASCAJA1    TABLE            Q1,1,1,20
 \par 
-\par \cf3                MEDIA                         :          0,647
-\par                DESVIACION ESTANDAR           :          0,778
+\par \cf3                MEDIA                         :          2,887
+\par                DESVIACION ESTANDAR           :          4,135
 \par                CANTIDAD EN RETRY             :              0
 \par 
 \par \cf2           INTERVALO       FRECUENCIA           %     %ACUMULADO    %REMANENTE
-\par \cf3          0  -         1          132      88,000         88,000        12,000
-\par          2  -         2           13       8,667         96,667         3,333
-\par          3  -         3            5       3,333        100,000         0,000
-\par             Las frecuencias restantes (17) son todas cero.
+\par \cf3          0  -         1           94      62,667         62,667        37,333
+\par          2  -         2            6       4,000         66,667        33,333
+\par          3  -         3            4       2,667         69,333        30,667
+\par          4  -         4            4       2,667         72,000        28,000
+\par          5  -         5            8       5,333         77,333        22,667
+\par          6  -         6            8       5,333         82,667        17,333
+\par          7  -         7            2       1,333         84,000        16,000
+\par          8  -         8            2       1,333         85,333        14,667
+\par          9  -         9            2       1,333         86,667        13,333
+\par         10  -        10            4       2,667         89,333        10,667
+\par         11  -        11            7       4,667         94,000         6,000
+\par         12  -        12            3       2,000         96,000         4,000
+\par         13  -        13            3       2,000         98,000         2,000
+\par         14  -        14            3       2,000        100,000         0,000
+\par             Las frecuencias restantes (6) son todas cero.
 \par 
 \par         CANTIDAD DE VALORES TABULADOS :           150
-\par         VALOR MAXIMO TABULADO         :         3,000
+\par         VALOR MAXIMO TABULADO         :        14,000
 \par 
 \par \cf4 TGENTECOLASCAJA2    TABLE            Q2,1,1,20
 \par 
-\par \cf3                MEDIA                         :          0,400
-\par                DESVIACION ESTANDAR           :          0,655
+\par \cf3                MEDIA                         :          2,667
+\par                DESVIACION ESTANDAR           :          3,986
 \par                CANTIDAD EN RETRY             :              0
 \par 
 \par \cf2           INTERVALO       FRECUENCIA           %     %ACUMULADO    %REMANENTE
-\par \cf3          0  -         1          140      93,333         93,333         6,667
-\par          2  -         2            8       5,333         98,667         1,333
-\par          3  -         3            2       1,333        100,000         0,000
-\par             Las frecuencias restantes (17) son todas cero.
+\par \cf3          0  -         1           96      64,000         64,000        36,000
+\par          2  -         2            5       3,333         67,333        32,667
+\par          3  -         3            5       3,333         70,667        29,333
+\par          4  -         4            4       2,667         73,333        26,667
+\par          5  -         5            7       4,667         78,000        22,000
+\par          6  -         6            5       3,333         81,333        18,667
+\par          7  -         7            5       3,333         84,667        15,333
+\par          8  -         8            2       1,333         86,000        14,000
+\par          9  -         9            5       3,333         89,333        10,667
+\par         10  -        10            4       2,667         92,000         8,000
+\par         11  -        11            3       2,000         94,000         6,000
+\par         12  -        12            5       3,333         97,333         2,667
+\par         13  -        13            4       2,667        100,000         0,000
+\par             Las frecuencias restantes (7) son todas cero.
 \par 
 \par         CANTIDAD DE VALORES TABULADOS :           150
-\par         VALOR MAXIMO TABULADO         :         3,000
+\par         VALOR MAXIMO TABULADO         :        13,000
 \par 
 \par \cf4 TGENTECOLASCAJA3    TABLE            Q3,1,1,20
 \par 
-\par \cf3                MEDIA                         :          0,053
-\par                DESVIACION ESTANDAR           :          0,253
+\par \cf3                MEDIA                         :          0,027
+\par                DESVIACION ESTANDAR           :          0,162
 \par                CANTIDAD EN RETRY             :              0
 \par 
 \par \cf2           INTERVALO       FRECUENCIA           %     %ACUMULADO    %REMANENTE
-\par \cf3          0  -         1          149      99,333         99,333         0,667
-\par          2  -         2            1       0,667        100,000         0,000
-\par             Las frecuencias restantes (18) son todas cero.
+\par \cf3          0  -         1          150     100,000        100,000         0,000
+\par             Las frecuencias restantes (19) son todas cero.
 \par 
 \par         CANTIDAD DE VALORES TABULADOS :           150
-\par         VALOR MAXIMO TABULADO         :         2,000
+\par         VALOR MAXIMO TABULADO         :         1,000
 \par 
 \par \cf4 TGENTECOLASCAJA4    TABLE            Q4,1,1,20
 \par 
@@ -236,51 +273,59 @@
 \par 
 \par \cf4 TTIEMPOSIST         TABLE            M1,180,180,30
 \par 
-\par \cf3                MEDIA                         :        590,494
-\par                DESVIACION ESTANDAR           :        422,630
+\par \cf3                MEDIA                         :        696,868
+\par                DESVIACION ESTANDAR           :        595,214
 \par                CANTIDAD EN RETRY             :              0
 \par 
 \par \cf2           INTERVALO       FRECUENCIA           %     %ACUMULADO    %REMANENTE
-\par \cf3          0  -       180          230      32,349         32,349        67,651
-\par        181  -       360           10       1,406         33,755        66,245
-\par        361  -       540           35       4,923         38,678        61,322
-\par        541  -       720          140      19,691         58,368        41,632
-\par        721  -       900          118      16,596         74,965        25,035
-\par        901  -      1080           89      12,518         87,482        12,518
-\par       1081  -      1260           49       6,892         94,374         5,626
-\par       1261  -      1440           33       4,641         99,015         0,985
-\par       1441  -      1620            6       0,844         99,859         0,141
-\par       1621  -      1800            1       0,141        100,000         0,000
-\par             Las frecuencias restantes (20) son todas cero.
+\par \cf3          0  -       180          218      31,965         31,965        68,035
+\par        181  -       360           15       2,199         34,164        65,836
+\par        361  -       540           37       5,425         39,589        60,411
+\par        541  -       720          114      16,716         56,305        43,695
+\par        721  -       900           69      10,117         66,422        33,578
+\par        901  -      1080           70      10,264         76,686        23,314
+\par       1081  -      1260           64       9,384         86,070        13,930
+\par       1261  -      1440           22       3,226         89,296        10,704
+\par       1441  -      1620           21       3,079         92,375         7,625
+\par       1621  -      1800           14       2,053         94,428         5,572
+\par       1801  -      1980           14       2,053         96,481         3,519
+\par       1981  -      2160           10       1,466         97,947         2,053
+\par       2161  -      2340            3       0,440         98,387         1,613
+\par       2341  -      2520            3       0,440         98,827         1,173
+\par       2521  -      2700            4       0,587         99,413         0,587
+\par       2701  -      2880            3       0,440         99,853         0,147
+\par       2881  -      3060            1       0,147        100,000         0,000
+\par             Las frecuencias restantes (13) son todas cero.
 \par 
-\par         CANTIDAD DE VALORES TABULADOS :           711
-\par         VALOR MAXIMO TABULADO         :      1627,000
+\par         CANTIDAD DE VALORES TABULADOS :           682
+\par         VALOR MAXIMO TABULADO         :      2969,000
 \par 
 \par \pard\qc\cf2\b\fs30 
 \par QTables
 \par 
 \par \pard\cf4\b0\fs20 TTIEMPOCOLAATENC    TABLE            ATENC,5,60,30
 \par 
-\par \cf3                MEDIA                         :         17,615
-\par                DESVIACION ESTANDAR           :         38,057
+\par \cf3                MEDIA                         :         19,021
+\par                DESVIACION ESTANDAR           :         46,728
 \par                CANTIDAD EN RETRY             :              0
 \par 
 \par \cf2           INTERVALO       FRECUENCIA           %     %ACUMULADO    %REMANENTE
-\par \cf3          0  -         5          496      64,752         64,752        35,248
-\par          6  -        65          208      27,154         91,906         8,094
-\par         66  -       125           29       3,786         95,692         4,308
-\par        126  -       185           25       3,264         98,956         1,044
-\par        186  -       245            8       1,044        100,000         0,000
-\par             Las frecuencias restantes (25) son todas cero.
+\par \cf3          0  -         5          491      64,099         64,099        35,901
+\par          6  -        65          219      28,590         92,689         7,311
+\par         66  -       125           17       2,219         94,909         5,091
+\par        126  -       185           19       2,480         97,389         2,611
+\par        186  -       245            9       1,175         98,564         1,436
+\par        246  -       305           11       1,436        100,000         0,000
+\par             Las frecuencias restantes (24) son todas cero.
 \par 
 \par         CANTIDAD DE VALORES TABULADOS :           766
-\par         VALOR MAXIMO TABULADO         :       206,000
+\par         VALOR MAXIMO TABULADO         :       267,000
 \par 
 \par \pard\qc\cf2\b\fs30 
 \par Savevalues
 \par 
 \par \pard\b0\fs20  SAVEVALUE               VALUE      RETRY
-\par \cf3  CANTCAJAS                   3          0
+\par \cf3  CANTCAJAS                   2          0
 \par       MED1                  40          0
 \par       MED2                  45          0
 \par 
@@ -288,50 +333,51 @@
 \par Cadena de eventos corrientes (CEC)
 \par 
 \par \pard\b0\fs20  CEC_XACT_NUMBER    PRI          M1       CURRENT       NEXT        PARAMETER        VALUE
-\par \cf3                8      0           0             0         54
+\par \cf3               22      0        1499            20         21             TIPO            1
+\par                                                                          DESV          120
+\par               91      0           0             0         55
 \par 
 \par \pard\qc\cf2\b\fs30 
 \par Cadena de eventos futuros (FEC)
 \par 
 \par \pard\b0\fs20  FEC_XACT_NUMBER    PRI         BDT       CURRENT       NEXT        PARAMETER        VALUE
-\par \cf3               10      0       25205            16         17             TIPO            2
+\par \cf3               58      0       25207            16         17             TIPO            2
 \par                                                                          DESV          120
-\par               42      0       25212            20         21             TIPO            2
-\par                                                                          DESV          120
-\par               18      0       25215            16         17             TIPO            2
-\par                                                                          DESV          120
-\par               41      0       25220             0          3
-\par               24      0       25221            16         17             TIPO            1
-\par                                                                          DESV          120
-\par               64      0       25224            23         24             TIPO            3
-\par                                                                          DESV          180
-\par               45      0       25226            12         13             TIPO            4
+\par                3      0       25209            12         13             TIPO            4
 \par                                                                          DESV          240
-\par               37      0       25233            39         40             TIPO            4
-\par                                                                          DESV          240
+\par               89      0       25210            16         17             TIPO            1
+\par                                                                          DESV          120
+\par               90      0       25220             0          3
+\par               51      0       25233            39         40             TIPO            1
+\par                                                                          DESV          120
+\par                                                                          CAJA            2
+\par               53      0       25250            39         40             TIPO            1
+\par                                                                          DESV          120
 \par                                                                          CAJA            1
-\par               47      0       25241            27         28             TIPO            4
+\par               78      0       25260            27         28             TIPO            4
 \par                                                                          DESV          240
-\par                2      0       25265            20         21             TIPO            2
+\par               65      0       25264            20         21             TIPO            1
 \par                                                                          DESV          120
-\par               28      0       25266             0          1
-\par               59      0       25301            27         28             TIPO            4
-\par                                                                          DESV          240
-\par               54      0       25304            27         28             TIPO            4
-\par                                                                          DESV          240
-\par               52      0       25310            27         28             TIPO            4
-\par                                                                          DESV          240
-\par               22      0       25334            20         21             TIPO            1
+\par               26      0       25266             0          1
+\par               57      0       25278            23         24             TIPO            3
+\par                                                                          DESV          180
+\par               11      0       25342            20         21             TIPO            1
 \par                                                                          DESV          120
-\par               39      0       25391            20         21             TIPO            1
-\par                                                                          DESV          120
-\par               58      0       25392            27         28             TIPO            4
+\par                2      0       25389            27         28             TIPO            4
 \par                                                                          DESV          240
-\par               55      0       25398            20         21             TIPO            1
-\par                                                                          DESV          120
-\par               23      0       25412            27         28             TIPO            4
+\par               66      0       25477            27         28             TIPO            4
 \par                                                                          DESV          240
-\par                3      0       28800             0         62
+\par               10      0       25494            20         21             TIPO            2
+\par                                                                          DESV          120
+\par               29      0       25539            27         28             TIPO            4
+\par                                                                          DESV          240
+\par               34      0       25553            20         21             TIPO            1
+\par                                                                          DESV          120
+\par               85      0       25562            27         28             TIPO            4
+\par                                                                          DESV          240
+\par               56      0       25719            27         28             TIPO            4
+\par                                                                          DESV          240
+\par               32      0       28800             0         63
 \par 
 \par }
  
