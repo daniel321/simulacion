@@ -1,368 +1,1001 @@
-{\rtf1\ansi\deff0{\fonttbl{\f0\fswiss\fcharset0 Courier New;}}
-{\colortbl ;\red128\green0\blue0;\red0\green0\blue128;\red0\green0\blue0;\red128\green0\blue128;}
-\viewkind4\uc1\pard\qc\cf1\lang11274\ul\b\f0\fs40 REPORTE SNAKE
-\par \cf2\ulnone\fs30 
-\par Informaci\'f3n general
-\par 
-\par \pard\b0\fs20       START_TIME         END_TIME     BLOCKS    FACILITIES    STORAGES
-\par \cf3                0            25200         64             6           2 
-\par \pard\qc\cf2\b\fs30 
-\par Bloques no ejecutables
-\par \pard\cf3\b0\fs20  TGENTECOLASCAJA\tab\tab TABLE\tab\tab Q$CAJAS,1,1,20
-\par TTIEMPOSIST\tab\tab TABLE\tab\tab M1,180,180,30\tab 
-\par TTIEMPOCOLAATENC\tab QTABLE\tab ATENC,5,60,30
-\par TGENTECOLASCAJA1\tab TABLE\tab\tab Q1,1,1,20\tab ; PARA TESTING
-\par TGENTECOLASCAJA2\tab TABLE\tab\tab Q2,1,1,20
-\par TGENTECOLASCAJA3\tab TABLE\tab\tab Q3,1,1,20
-\par TGENTECOLASCAJA4\tab TABLE\tab\tab Q4,1,1,20
-\par TGENTECOLASCAJA5\tab TABLE\tab\tab Q5,1,1,20
-\par DISTTIPOS\tab\tab\tab TABLE\tab\tab *TIPO,1,1,5
-\par POISSON\tab\tab\tab FUNCTION\tab\tab RN2,C24\tab 
-\par 0.0,0.0/0.1,.104/.2,.222/.3,.335/.4,.509/.5,.69/.6,.915/.7,1.2/.75,1.38/.8,1.6/.84,1.83/.88,2.12/
-\par 0.9,2.3/.92,2.52/.94,2.81/.95,2.99/.96,3.2/.97,3.5/.98,3.9/.99,4.6/.995,5.3/.998,6.2/.999,7.0/.9997,8.0
-\par TIPOCLI\tab\tab\tab FUNCTION\tab\tab RN3,D4
-\par .35,1/.55,2/.70,3/1,4
-\par PCENTSEVA\tab\tab\tab FUNCTION\tab\tab *TIPO,D4
-\par 1,200/2,500/3,350/4,250
-\par MEDIADEMORA\tab\tab FUNCTION\tab\tab *TIPO,D4
-\par 1,360/2,300/3,420/4,480
-\par DESVDEMORA\tab\tab\tab FUNCTION\tab\tab *TIPO,D4
-\par 1,120/2,120/3,180/4,240
-\par ATENCSERVTEC\tab\tab STORAGE\tab\tab 5
-\par ATENCPROMVTAS\tab\tab STORAGE\tab\tab 6
-\par \tab\tab INITIAL\tab X$MED1,90
-\par \tab\tab INITIAL\tab X$MED2,120
-\par \tab\tab INITIAL\tab X$CANTCAJAS,2
-\par 
-\par \pard\qc\cf2\b\fs30 
-\par Bloques ejecutables
-\par 
-\par \pard\b0\fs20   LINE         LOC  BLOCK_TYPE                               ENTRY_COUNT  CURRENT_COUNT  RETRY
-\par \cf3      1           1  GENERATE        X$MED1,FN$POISSON                497              0      0
-\par      2           2  TRANSFER        ,INICIO                          497              0      0
-\par      3           3  GENERATE        X$MED2,FN$POISSON,5400           269              0      0
-\par      4           4  TRANSFER        ,INICIO                          269              0      0
-\par      5      INICIO  ASSIGN          TIPO,FN$TIPOCLI                  766              0      0
-\par      6           6  ASSIGN          DESV,FN$DESVDEMORA               766              0      0
-\par      7           7  TABULATE        DISTTIPOS                        766              0      0
-\par      8           8  ADVANCE         25,15                            766              0      0
-\par      9           9  QUEUE           ATENC                            766             93      0
-\par     10          10  SEIZE           ATENC                            673              0      0
-\par     11          11  DEPART          ATENC                            673              0      0
-\par     12          12  ADVANCE         30,15                            673              1      0
-\par     13          13  RELEASE         ATENC                            672              0      0
-\par     15          14  TRANSFER        FN$PCENTSEVA,,FIN                672              0      0
-\par     17          15  TEST        LE  *TIPO,2,AVTAS                    486              0      0
-\par     18  ASVTECNICO  ADVANCE         45,15                            270              0      0
-\par     19          17  QUEUE           ATENCSERVTEC                     270              5      0
-\par     20          18  ENTER           ATENCSERVTEC                     265              0      0
-\par     21          19  DEPART          ATENCSERVTEC                     265              0      0
-\par     22          20  ADVANCE         FN$MEDIADEMORA,*DESV             265              5      0
-\par     23          21  LEAVE           ATENCSERVTEC                     260              0      0
-\par     24          22  TRANSFER        ,ACAJAS                          260              0      0
-\par     25       AVTAS  ADVANCE         60,30                            216              1      0
-\par     26          24  QUEUE           ATENCPROMVTAS                    215              1      0
-\par     27          25  ENTER           ATENCPROMVTAS                    214              0      0
-\par     28          26  DEPART          ATENCPROMVTAS                    214              0      0
-\par     29          27  ADVANCE         FN$MEDIADEMORA,*DESV             214              6      0
-\par     30          28  LEAVE           ATENCPROMVTAS                    208              0      0
-\par     31          29  TRANSFER        ,ACAJAS                          208              0      0
-\par     32      ACAJAS  ADVANCE         45,15                            468              2      0
-\par     33          31  SELECT      NU  CAJA,1,X$CANTCAJAS,,,OCUP         466              0      0
-\par     34          32  TRANSFER        ,ACOLACAJAS                      417              0      0
-\par     35        OCUP  SELECT      MIN CAJA,1,X$CANTCAJAS,,Q             49              0      0
-\par     36  ACOLACAJAS  QUEUE           CAJAS                            466              0      0
-\par     37          35  QUEUE           *CAJA                            466              0      0
-\par     38          36  SEIZE           *CAJA                            466              0      0
-\par     39          37  DEPART          *CAJA                            466              0      0
-\par     40          38  DEPART          CAJAS                            466              0      0
-\par     41          39  ADVANCE         90,45                            466              4      0
-\par     42          40  RELEASE         *CAJA                            462              0      0
-\par     43         FIN  TABULATE        TTIEMPOSIST                      648              0      0
-\par     44          42  TERMINATE                                        648              0      0
-\par     74          43  GENERATE        ,,5400,1                           1              0      0
-\par     75          44  SAVEVALUE       MED1,60                            1              0      0
-\par     76          45  SAVEVALUE       CANTCAJAS,3                        1              0      0
-\par     77          46  ADVANCE         7200,0                             1              0      0
-\par     78          47  SAVEVALUE       MED1,45                            1              0      0
-\par     79          48  SAVEVALUE       MED2,75                            1              0      0
-\par     80          49  SAVEVALUE       CANTCAJAS,4                        1              0      0
-\par     81          50  ADVANCE         5400,0                             1              0      0
-\par     82          51  SAVEVALUE       MED1,40                            1              0      0
-\par     83          52  SAVEVALUE       MED2,45                            1              0      0
-\par     84          53  SAVEVALUE       CANTCAJAS,5                        1              0      0
-\par     85          54  TERMINATE                                          1              0      0
-\par     87          55  GENERATE        120,0,7200                       150              0      0
-\par     88          56  TABULATE        TGENTECOLASCAJA                  150              0      0
-\par     89          57  TABULATE        TGENTECOLASCAJA1                 150              0      0
-\par     90          58  TABULATE        TGENTECOLASCAJA2                 150              0      0
-\par     91          59  TABULATE        TGENTECOLASCAJA3                 150              0      0
-\par     92          60  TABULATE        TGENTECOLASCAJA4                 150              0      0
-\par     93          61  TABULATE        TGENTECOLASCAJA5                 150              0      0
-\par     94          62  TERMINATE                                        150              0      0
-\par     96          63  GENERATE        3600,0                             7              0      0
-\par     97          64  TERMINATE       1                                  7              0      0
-\par \pard\qc\cf2\b\fs30 
-\par Facilities
-\par 
-\par \pard\b0\fs20  FACILITY          ENTRIES    UTIL.  AVE_TIME  AVAILABLE   OWNER   PEND   INTER   RETRY   DELAY
-\par \cf3               1        183    0,657    90,519          1       0      0       0       0       0
-\par               2        136    0,509    94,250          1      43      0       0       0       0
-\par               3         95    0,342    90,832          1      42      0       0       0       0
-\par               4         42    0,140    83,762          1      45      0       0       0       0
-\par               5         10    0,034    85,300          1      44      0       0       0       0
-\par           ATENC        673    0,784    29,346          1      60      0       0       0      93
-\par \pard\qc\cf2\b\fs30 
-\par Queues
-\par 
-\par \pard\b0\fs20  QUEUE             MAX      CONT.  ENTRIES ENTRIES(0)  AVE.CONT.   AVE.TIME    AVE.(-0)   RETRY
-\par \cf3               1      1         0       183      151       0,070       9,683      55,375       0
-\par               2      1         0       136      124       0,024       4,493      50,917       0
-\par               3      1         0        95       90       0,009       2,326      44,200       0
-\par               4      1         0        42       42       0,000       0,000       0,000       0
-\par               5      1         0        10       10       0,000       0,000       0,000       0
-\par           ATENC     95        93       766       92      14,994     493,265     560,595       0
-\par   ATENCPROMVTAS      6         1       215      118       0,515      60,363     133,794       0
-\par    ATENCSERVTEC      9         5       270      112       1,407     131,326     224,418       0
-\par           CAJAS      3         0       466      417       0,103       5,588      53,143       0
-\par \pard\qc\cf2\b\fs30 
-\par Storages
-\par 
-\par \pard\b0\fs20  STORAGE           CAP.   REMAIN.   MIN.   MAX.  ENTRIES  AVL.   AVE.C.    UTIL.  RETRY   DELAY
-\par \cf3   ATENCPROMVTAS       6        0       0      6      214     1    3,938    0,656      0       1
-\par    ATENCSERVTEC       5        0       0      5      265     1    3,589    0,718      0       5
-\par \pard\qc\cf2\b\fs30 
-\par Tables
-\par 
-\par \pard\cf4\b0\fs20 DISTTIPOS           TABLE            *TIPO,1,1,5
-\par 
-\par \cf3                MEDIA                         :          2,398
-\par                DESVIACION ESTANDAR           :          1,228
-\par                CANTIDAD EN RETRY             :              0
-\par 
-\par \cf2           INTERVALO       FRECUENCIA           %     %ACUMULADO    %REMANENTE
-\par \cf3          0  -         1          262      34,204         34,204        65,796
-\par          2  -         2          160      20,888         55,091        44,909
-\par          3  -         3          121      15,796         70,888        29,112
-\par          4  -         4          223      29,112        100,000         0,000
-\par             Las frecuencias restantes (1) son todas cero.
-\par 
-\par         CANTIDAD DE VALORES TABULADOS :           766
-\par         VALOR MAXIMO TABULADO         :         4,000
-\par 
-\par \cf4 TGENTECOLASCAJA     TABLE            Q$CAJAS,1,1,20
-\par 
-\par \cf3                MEDIA                         :          0,133
-\par                DESVIACION ESTANDAR           :          0,444
-\par                CANTIDAD EN RETRY             :              0
-\par 
-\par \cf2           INTERVALO       FRECUENCIA           %     %ACUMULADO    %REMANENTE
-\par \cf3          0  -         1          146      97,333         97,333         2,667
-\par          2  -         2            3       2,000         99,333         0,667
-\par          3  -         3            1       0,667        100,000         0,000
-\par             Las frecuencias restantes (17) son todas cero.
-\par 
-\par         CANTIDAD DE VALORES TABULADOS :           150
-\par         VALOR MAXIMO TABULADO         :         3,000
-\par 
-\par \cf4 TGENTECOLASCAJA1    TABLE            Q1,1,1,20
-\par 
-\par \cf3                MEDIA                         :          0,093
-\par                DESVIACION ESTANDAR           :          0,292
-\par                CANTIDAD EN RETRY             :              0
-\par 
-\par \cf2           INTERVALO       FRECUENCIA           %     %ACUMULADO    %REMANENTE
-\par \cf3          0  -         1          150     100,000        100,000         0,000
-\par             Las frecuencias restantes (19) son todas cero.
-\par 
-\par         CANTIDAD DE VALORES TABULADOS :           150
-\par         VALOR MAXIMO TABULADO         :         1,000
-\par 
-\par \cf4 TGENTECOLASCAJA2    TABLE            Q2,1,1,20
-\par 
-\par \cf3                MEDIA                         :          0,027
-\par                DESVIACION ESTANDAR           :          0,162
-\par                CANTIDAD EN RETRY             :              0
-\par 
-\par \cf2           INTERVALO       FRECUENCIA           %     %ACUMULADO    %REMANENTE
-\par \cf3          0  -         1          150     100,000        100,000         0,000
-\par             Las frecuencias restantes (19) son todas cero.
-\par 
-\par         CANTIDAD DE VALORES TABULADOS :           150
-\par         VALOR MAXIMO TABULADO         :         1,000
-\par 
-\par \cf4 TGENTECOLASCAJA3    TABLE            Q3,1,1,20
-\par 
-\par \cf3                MEDIA                         :          0,013
-\par                DESVIACION ESTANDAR           :          0,115
-\par                CANTIDAD EN RETRY             :              0
-\par 
-\par \cf2           INTERVALO       FRECUENCIA           %     %ACUMULADO    %REMANENTE
-\par \cf3          0  -         1          150     100,000        100,000         0,000
-\par             Las frecuencias restantes (19) son todas cero.
-\par 
-\par         CANTIDAD DE VALORES TABULADOS :           150
-\par         VALOR MAXIMO TABULADO         :         1,000
-\par 
-\par \cf4 TGENTECOLASCAJA4    TABLE            Q4,1,1,20
-\par 
-\par \cf3                MEDIA                         :          0,000
-\par                DESVIACION ESTANDAR           :          0,000
-\par                CANTIDAD EN RETRY             :              0
-\par 
-\par \cf2           INTERVALO       FRECUENCIA           %     %ACUMULADO    %REMANENTE
-\par \cf3          0  -         1          150     100,000        100,000         0,000
-\par             Las frecuencias restantes (19) son todas cero.
-\par 
-\par         CANTIDAD DE VALORES TABULADOS :           150
-\par         VALOR MAXIMO TABULADO         :         0,000
-\par 
-\par \cf4 TGENTECOLASCAJA5    TABLE            Q5,1,1,20
-\par 
-\par \cf3                MEDIA                         :          0,000
-\par                DESVIACION ESTANDAR           :          0,000
-\par                CANTIDAD EN RETRY             :              0
-\par 
-\par \cf2           INTERVALO       FRECUENCIA           %     %ACUMULADO    %REMANENTE
-\par \cf3          0  -         1          150     100,000        100,000         0,000
-\par             Las frecuencias restantes (19) son todas cero.
-\par 
-\par         CANTIDAD DE VALORES TABULADOS :           150
-\par         VALOR MAXIMO TABULADO         :         0,000
-\par 
-\par \cf4 TTIEMPOSIST         TABLE            M1,180,180,30
-\par 
-\par \cf3                MEDIA                         :        944,481
-\par                DESVIACION ESTANDAR           :        571,854
-\par                CANTIDAD EN RETRY             :              0
-\par 
-\par \cf2           INTERVALO       FRECUENCIA           %     %ACUMULADO    %REMANENTE
-\par \cf3          0  -       180           84      12,963         12,963        87,037
-\par        181  -       360           13       2,006         14,969        85,031
-\par        361  -       540           44       6,790         21,759        78,241
-\par        541  -       720          131      20,216         41,975        58,025
-\par        721  -       900           70      10,802         52,778        47,222
-\par        901  -      1080           60       9,259         62,037        37,963
-\par       1081  -      1260           52       8,025         70,062        29,938
-\par       1261  -      1440           49       7,562         77,623        22,377
-\par       1441  -      1620           70      10,802         88,426        11,574
-\par       1621  -      1800           31       4,784         93,210         6,790
-\par       1801  -      1980           15       2,315         95,525         4,475
-\par       1981  -      2160            9       1,389         96,914         3,086
-\par       2161  -      2340           11       1,698         98,611         1,389
-\par       2341  -      2520            3       0,463         99,074         0,926
-\par       2521  -      2700            6       0,926        100,000         0,000
-\par             Las frecuencias restantes (15) son todas cero.
-\par 
-\par         CANTIDAD DE VALORES TABULADOS :           648
-\par         VALOR MAXIMO TABULADO         :      2657,000
-\par 
-\par \pard\qc\cf2\b\fs30 
-\par QTables
-\par 
-\par \pard\cf4\b0\fs20 TTIEMPOCOLAATENC    TABLE            ATENC,5,60,30
-\par 
-\par \cf3                MEDIA                         :        439,201
-\par                DESVIACION ESTANDAR           :        449,740
-\par                CANTIDAD EN RETRY             :              0
-\par 
-\par \cf2           INTERVALO       FRECUENCIA           %     %ACUMULADO    %REMANENTE
-\par \cf3          0  -         5          103      15,305         15,305        84,695
-\par          6  -        65          122      18,128         33,432        66,568
-\par         66  -       125           56       8,321         41,753        58,247
-\par        126  -       185           23       3,418         45,171        54,829
-\par        186  -       245           12       1,783         46,954        53,046
-\par        246  -       305            8       1,189         48,143        51,857
-\par        306  -       365            9       1,337         49,480        50,520
-\par        366  -       425           16       2,377         51,857        48,143
-\par        426  -       485           31       4,606         56,464        43,536
-\par        486  -       545           32       4,755         61,218        38,782
-\par        546  -       605           45       6,686         67,905        32,095
-\par        606  -       665           53       7,875         75,780        24,220
-\par        666  -       725           19       2,823         78,603        21,397
-\par        726  -       785            9       1,337         79,941        20,059
-\par        786  -       845            3       0,446         80,386        19,614
-\par        846  -       905           20       2,972         83,358        16,642
-\par        906  -       965           22       3,269         86,627        13,373
-\par        966  -      1025            5       0,743         87,370        12,630
-\par       1026  -      1085            5       0,743         88,113        11,887
-\par       1086  -      1145           10       1,486         89,599        10,401
-\par       1146  -      1205            4       0,594         90,193         9,807
-\par       1206  -      1265            4       0,594         90,788         9,212
-\par       1266  -      1325            4       0,594         91,382         8,618
-\par       1326  -      1385           18       2,675         94,056         5,944
-\par       1386  -      1445           30       4,458         98,514         1,486
-\par       1446  -      1505            6       0,892         99,406         0,594
-\par       1506  -      1565            2       0,297         99,703         0,297
-\par       1566  -      1625            2       0,297        100,000         0,000
-\par             Las frecuencias restantes (2) son todas cero.
-\par 
-\par         CANTIDAD DE VALORES TABULADOS :           673
-\par         VALOR MAXIMO TABULADO         :      1586,000
-\par 
-\par \pard\qc\cf2\b\fs30 
-\par Savevalues
-\par 
-\par \pard\b0\fs20  SAVEVALUE               VALUE      RETRY
-\par \cf3  CANTCAJAS                   5          0
-\par       MED1                  40          0
-\par       MED2                  45          0
-\par 
-\par \pard\qc\cf2\b\fs30 
-\par Cadena de eventos corrientes (CEC)
-\par 
-\par \pard\b0\fs20  CEC_XACT_NUMBER    PRI          M1       CURRENT       NEXT        PARAMETER        VALUE
-\par \cf3              124      0           0             0         55
-\par 
-\par \pard\qc\cf2\b\fs30 
-\par Cadena de eventos futuros (FEC)
-\par 
-\par \pard\b0\fs20  FEC_XACT_NUMBER    PRI         BDT       CURRENT       NEXT        PARAMETER        VALUE
-\par \cf3               27      0       25201            30         31             TIPO            1
-\par                                                                          DESV          120
-\par               29      0       25207            30         31             TIPO            3
-\par                                                                          DESV          180
-\par               45      0       25218            39         40             TIPO            1
-\par                                                                          DESV          120
-\par                                                                          CAJA            4
-\par              123      0       25220             0          3
-\par               60      0       25224            12         13             TIPO            2
-\par                                                                          DESV          120
-\par               56      0       25237            27         28             TIPO            4
-\par                                                                          DESV          240
-\par               43      0       25244            39         40             TIPO            1
-\par                                                                          DESV          120
-\par                                                                          CAJA            2
-\par               42      0       25253            39         40             TIPO            4
-\par                                                                          DESV          240
-\par                                                                          CAJA            3
-\par               44      0       25264            39         40             TIPO            1
-\par                                                                          DESV          120
-\par                                                                          CAJA            5
-\par               80      0       25266             0          1
-\par               72      0       25273            23         24             TIPO            4
-\par                                                                          DESV          240
-\par               68      0       25324            27         28             TIPO            4
-\par                                                                          DESV          240
-\par               24      0       25397            20         21             TIPO            1
-\par                                                                          DESV          120
-\par               30      0       25417            20         21             TIPO            2
-\par                                                                          DESV          120
-\par               35      0       25418            27         28             TIPO            3
-\par                                                                          DESV          180
-\par               17      0       25456            20         21             TIPO            2
-\par                                                                          DESV          120
-\par               54      0       25460            27         28             TIPO            3
-\par                                                                          DESV          180
-\par               23      0       25480            20         21             TIPO            1
-\par                                                                          DESV          120
-\par               37      0       25485            20         21             TIPO            2
-\par                                                                          DESV          120
-\par               22      0       25540            27         28             TIPO            4
-\par                                                                          DESV          240
-\par               38      0       25797            27         28             TIPO            4
-\par                                                                          DESV          240
-\par               49      0       28800             0         63
-\par 
+{\rtf1\ansi\deff3\adeflang1025
+{\fonttbl{\f0\froman\fprq2\fcharset0 Times New Roman;}{\f1\froman\fprq2\fcharset2 Symbol;}{\f2\fswiss\fprq2\fcharset0 Arial;}{\f3\fswiss\fprq1\fcharset0 Courier New;}{\f4\fnil\fprq2\fcharset0 Microsoft YaHei;}{\f5\fnil\fprq2\fcharset0 Arial;}{\f6\fswiss\fprq0\fcharset128 Arial;}}
+{\colortbl;\red0\green0\blue0;\red128\green0\blue0;\red0\green0\blue128;\red128\green0\blue128;\red128\green128\blue128;}
+{\stylesheet{\s0\snext0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274 Predeterminado;}
+{\s15\sbasedon0\snext16\sb240\sa120\keepn\hich\af4\dbch\af5\afs28\loch\f2\fs28 Encabezado;}
+{\s16\sbasedon0\snext16\sb0\sa120 Cuerpo de texto;}
+{\s17\sbasedon16\snext17\sb0\sa120\dbch\af6 Lista;}
+{\s18\sbasedon0\snext18\sb120\sa120\noline\i\dbch\af6\afs24\ai\fs24 Etiqueta;}
+{\s19\sbasedon0\snext19\noline\dbch\af6 Índice;}
+}{\info{\creatim\yr0\mo0\dy0\hr0\min0}{\revtim\yr0\mo0\dy0\hr0\min0}{\printim\yr0\mo0\dy0\hr0\min0}{\comment OpenOffice}{\vern4110}}\deftab720\deftab720\deftab720\deftab720\deftab720\deftab720\deftab720\deftab720\deftab720\deftab720\deftab720\deftab720\deftab720\deftab720\deftab720\deftab720\deftab720\deftab720\deftab720\deftab720
+
+{\*\pgdsctbl
+{\pgdsc0\pgdscuse195\pgwsxn12240\pghsxn15840\marglsxn1800\margrsxn1800\margtsxn1440\margbsxn1440\pgdscnxt0 Predeterminado;}}
+\formshade{\*\pgdscno0}\paperh15840\paperw12240\margl1800\margr1800\margt1440\margb1440\sectd\sbknone\sectunlocked1\pgndec\pgwsxn12240\pghsxn15840\marglsxn1800\margrsxn1800\margtsxn1440\margbsxn1440\ftnbj\ftnstart1\ftnrstcont\ftnnar\aenddoc\aftnrstcont\aftnstart1\aftnnrlc
+\pgndec\pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274\qc{\cf2\ul\ulc0\b\afs12\ab\rtlch \ltrch\loch\fs12
+REPORTE SNAKE}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274\qc{\cf3\b\afs12\ab\rtlch \ltrch\loch\fs12
+}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274\qc{\cf3\b\afs12\ab\rtlch \ltrch\loch\fs12
+Informaci\'f3n general}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274\qc{\cf3\b\afs12\ab\rtlch \ltrch\loch\fs12
+}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf3\afs12\rtlch \ltrch\fs12
+      }{\cf3\afs12\rtlch \ltrch\loch\fs12
+START_TIME         END_TIME     BLOCKS    FACILITIES    STORAGES}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+               }{\cf1\afs12\rtlch \ltrch\loch\fs12
+0            25200         64             6           2 }
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274\qc{\cf3\b\afs12\ab\rtlch \ltrch\loch\fs12
+}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274\qc{\cf3\b\afs12\ab\rtlch \ltrch\loch\fs12
+Bloques no ejecutables}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+ }{\cf1\afs12\rtlch \ltrch\loch\fs12
+TGENTECOLASCAJA\tab \tab TABLE\tab \tab Q$CAJAS,1,1,20}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\loch\fs12
+TTIEMPOSIST\tab \tab TABLE\tab \tab M1,180,180,30\tab }
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\loch\fs12
+TTIEMPOCOLAATENC\tab QTABLE\tab ATENC,5,60,30}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\loch\fs12
+TGENTECOLASCAJA1\tab TABLE\tab \tab Q1,1,1,20\tab ; PARA TESTING}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\loch\fs12
+TGENTECOLASCAJA2\tab TABLE\tab \tab Q2,1,1,20}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\loch\fs12
+TGENTECOLASCAJA3\tab TABLE\tab \tab Q3,1,1,20}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\loch\fs12
+TGENTECOLASCAJA4\tab TABLE\tab \tab Q4,1,1,20}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\loch\fs12
+TGENTECOLASCAJA5\tab TABLE\tab \tab Q5,1,1,20}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\loch\fs12
+DISTTIPOS\tab \tab \tab TABLE\tab \tab *TIPO,1,1,5}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\loch\fs12
+POISSON\tab \tab \tab FUNCTION\tab \tab RN2,C24\tab }
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\loch\fs12
+0.0,0.0/0.1,.104/.2,.222/.3,.335/.4,.509/.5,.69/.6,.915/.7,1.2/.75,1.38/.8,1.6/.84,1.83/.88,2.12/}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\loch\fs12
+0.9,2.3/.92,2.52/.94,2.81/.95,2.99/.96,3.2/.97,3.5/.98,3.9/.99,4.6/.995,5.3/.998,6.2/.999,7.0/.9997,8.0}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\loch\fs12
+TIPOCLI\tab \tab \tab FUNCTION\tab \tab RN3,D4}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\loch\fs12
+.35,1/.55,2/.70,3/1,4}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\loch\fs12
+PCENTSEVA\tab \tab \tab FUNCTION\tab \tab *TIPO,D4}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\loch\fs12
+1,200/2,500/3,350/4,250}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\loch\fs12
+MEDIADEMORA\tab \tab FUNCTION\tab \tab *TIPO,D4}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\loch\fs12
+1,360/2,300/3,420/4,480}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\loch\fs12
+DESVDEMORA\tab \tab \tab FUNCTION\tab \tab *TIPO,D4}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\loch\fs12
+1,120/2,120/3,180/4,240}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\loch\fs12
+ATENCSERVTEC\tab \tab STORAGE\tab \tab 5}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\loch\fs12
+ATENCPROMVTAS\tab \tab STORAGE\tab \tab 6}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\loch\fs12
+\tab \tab INITIAL\tab X$MED1,90}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\loch\fs12
+\tab \tab INITIAL\tab X$MED2,120}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\loch\fs12
+\tab \tab INITIAL\tab X$CANTCAJAS,2}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\loch\fs12
+}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274\qc{\cf3\b\afs12\ab\rtlch \ltrch\loch\fs12
+}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274\qc{\cf3\b\afs12\ab\rtlch \ltrch\loch\fs12
+Bloques ejecutables}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274\qc{\cf3\b\afs12\ab\rtlch \ltrch\loch\fs12
+}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf3\afs12\rtlch \ltrch\fs12
+  }{\cf3\afs12\rtlch \ltrch\loch\fs12
+LINE         LOC  BLOCK_TYPE                               ENTRY_COUNT  CURRENT_COUNT  RETRY}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+     }{\cf1\afs12\rtlch \ltrch\loch\fs12
+1           1  GENERATE        X$MED1,FN$POISSON                497              0      0}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+     }{\cf1\afs12\rtlch \ltrch\loch\fs12
+2           2  TRANSFER        ,INICIO                          497              0      0}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+     }{\cf1\afs12\rtlch \ltrch\loch\fs12
+3           3  GENERATE        X$MED2,FN$POISSON,5400           269              0      0}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+     }{\cf1\afs12\rtlch \ltrch\loch\fs12
+4           4  TRANSFER        ,INICIO                          269              0      0}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+     }{\cf1\afs12\rtlch \ltrch\loch\fs12
+5      INICIO  ASSIGN          TIPO,FN$TIPOCLI                  766              0      0}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+     }{\cf1\afs12\rtlch \ltrch\loch\fs12
+6           6  ASSIGN          DESV,FN$DESVDEMORA               766              0      0}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+     }{\cf1\afs12\rtlch \ltrch\loch\fs12
+7           7  TABULATE        DISTTIPOS                        766              0      0}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+     }{\cf1\afs12\rtlch \ltrch\loch\fs12
+8           8  ADVANCE         25,15                            766              0      0}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+     }{\cf1\afs12\rtlch \ltrch\loch\fs12
+9           9  QUEUE           ATENC                            766             93      0}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+    }{\cf1\afs12\rtlch \ltrch\loch\fs12
+10          10  SEIZE           ATENC                            673              0      0}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+    }{\cf1\afs12\rtlch \ltrch\loch\fs12
+11          11  DEPART          ATENC                            673              0      0}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+    }{\cf1\afs12\rtlch \ltrch\loch\fs12
+12          12  ADVANCE         30,15                            673              1      0}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+    }{\cf1\afs12\rtlch \ltrch\loch\fs12
+13          13  RELEASE         ATENC                            672              0      0}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+    }{\cf1\afs12\rtlch \ltrch\loch\fs12
+15          14  TRANSFER        FN$PCENTSEVA,,FIN                672              0      0}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+    }{\cf1\afs12\rtlch \ltrch\loch\fs12
+17          15  TEST        LE  *TIPO,2,AVTAS                    486              0      0}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+    }{\cf1\afs12\rtlch \ltrch\loch\fs12
+18  ASVTECNICO  ADVANCE         45,15                            270              0      0}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+    }{\cf1\afs12\rtlch \ltrch\loch\fs12
+19          17  QUEUE           ATENCSERVTEC                     270              5      0}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+    }{\cf1\afs12\rtlch \ltrch\loch\fs12
+20          18  ENTER           ATENCSERVTEC                     265              0      0}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+    }{\cf1\afs12\rtlch \ltrch\loch\fs12
+21          19  DEPART          ATENCSERVTEC                     265              0      0}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+    }{\cf1\afs12\rtlch \ltrch\loch\fs12
+22          20  ADVANCE         FN$MEDIADEMORA,*DESV             265              5      0}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+    }{\cf1\afs12\rtlch \ltrch\loch\fs12
+23          21  LEAVE           ATENCSERVTEC                     260              0      0}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+    }{\cf1\afs12\rtlch \ltrch\loch\fs12
+24          22  TRANSFER        ,ACAJAS                          260              0      0}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+    }{\cf1\afs12\rtlch \ltrch\loch\fs12
+25       AVTAS  ADVANCE         60,30                            216              1      0}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+    }{\cf1\afs12\rtlch \ltrch\loch\fs12
+26          24  QUEUE           ATENCPROMVTAS                    215              1      0}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+    }{\cf1\afs12\rtlch \ltrch\loch\fs12
+27          25  ENTER           ATENCPROMVTAS                    214              0      0}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+    }{\cf1\afs12\rtlch \ltrch\loch\fs12
+28          26  DEPART          ATENCPROMVTAS                    214              0      0}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+    }{\cf1\afs12\rtlch \ltrch\loch\fs12
+29          27  ADVANCE         FN$MEDIADEMORA,*DESV             214              6      0}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+    }{\cf1\afs12\rtlch \ltrch\loch\fs12
+30          28  LEAVE           ATENCPROMVTAS                    208              0      0}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+    }{\cf1\afs12\rtlch \ltrch\loch\fs12
+31          29  TRANSFER        ,ACAJAS                          208              0      0}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+    }{\cf1\afs12\rtlch \ltrch\loch\fs12
+32      ACAJAS  ADVANCE         45,15                            468              2      0}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+    }{\cf1\afs12\rtlch \ltrch\loch\fs12
+33          31  SELECT      NU  CAJA,1,X$CANTCAJAS,,,OCUP         466              0      0}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+    }{\cf1\afs12\rtlch \ltrch\loch\fs12
+34          32  TRANSFER        ,ACOLACAJAS                      417              0      0}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+    }{\cf1\afs12\rtlch \ltrch\loch\fs12
+35        OCUP  SELECT      MIN CAJA,1,X$CANTCAJAS,,Q             49              0      0}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+    }{\cf1\afs12\rtlch \ltrch\loch\fs12
+36  ACOLACAJAS  QUEUE           CAJAS                            466              0      0}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+    }{\cf1\afs12\rtlch \ltrch\loch\fs12
+37          35  QUEUE           *CAJA                            466              0      0}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+    }{\cf1\afs12\rtlch \ltrch\loch\fs12
+38          36  SEIZE           *CAJA                            466              0      0}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+    }{\cf1\afs12\rtlch \ltrch\loch\fs12
+39          37  DEPART          *CAJA                            466              0      0}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+    }{\cf1\afs12\rtlch \ltrch\loch\fs12
+40          38  DEPART          CAJAS                            466              0      0}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+    }{\cf1\afs12\rtlch \ltrch\loch\fs12
+41          39  ADVANCE         90,45                            466              4      0}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+    }{\cf1\afs12\rtlch \ltrch\loch\fs12
+42          40  RELEASE         *CAJA                            462              0      0}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+    }{\cf1\afs12\rtlch \ltrch\loch\fs12
+43         FIN  TABULATE        TTIEMPOSIST                      648              0      0}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+    }{\cf1\afs12\rtlch \ltrch\loch\fs12
+44          42  TERMINATE                                        648              0      0}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+    }{\cf1\afs12\rtlch \ltrch\loch\fs12
+74          43  GENERATE        ,,5400,1                           1              0      0}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+    }{\cf1\afs12\rtlch \ltrch\loch\fs12
+75          44  SAVEVALUE       MED1,60                            1              0      0}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+    }{\cf1\afs12\rtlch \ltrch\loch\fs12
+76          45  SAVEVALUE       CANTCAJAS,3                        1              0      0}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+    }{\cf1\afs12\rtlch \ltrch\loch\fs12
+77          46  ADVANCE         7200,0                             1              0      0}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+    }{\cf1\afs12\rtlch \ltrch\loch\fs12
+78          47  SAVEVALUE       MED1,45                            1              0      0}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+    }{\cf1\afs12\rtlch \ltrch\loch\fs12
+79          48  SAVEVALUE       MED2,75                            1              0      0}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+    }{\cf1\afs12\rtlch \ltrch\loch\fs12
+80          49  SAVEVALUE       CANTCAJAS,4                        1              0      0}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+    }{\cf1\afs12\rtlch \ltrch\loch\fs12
+81          50  ADVANCE         5400,0                             1              0      0}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+    }{\cf1\afs12\rtlch \ltrch\loch\fs12
+82          51  SAVEVALUE       MED1,40                            1              0      0}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+    }{\cf1\afs12\rtlch \ltrch\loch\fs12
+83          52  SAVEVALUE       MED2,45                            1              0      0}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+    }{\cf1\afs12\rtlch \ltrch\loch\fs12
+84          53  SAVEVALUE       CANTCAJAS,5                        1              0      0}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+    }{\cf1\afs12\rtlch \ltrch\loch\fs12
+85          54  TERMINATE                                          1              0      0}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+    }{\cf1\afs12\rtlch \ltrch\loch\fs12
+87          55  GENERATE        120,0,7200                       150              0      0}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+    }{\cf1\afs12\rtlch \ltrch\loch\fs12
+88          56  TABULATE        TGENTECOLASCAJA                  150              0      0}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+    }{\cf1\afs12\rtlch \ltrch\loch\fs12
+89          57  TABULATE        TGENTECOLASCAJA1                 150              0      0}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+    }{\cf1\afs12\rtlch \ltrch\loch\fs12
+90          58  TABULATE        TGENTECOLASCAJA2                 150              0      0}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+    }{\cf1\afs12\rtlch \ltrch\loch\fs12
+91          59  TABULATE        TGENTECOLASCAJA3                 150              0      0}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+    }{\cf1\afs12\rtlch \ltrch\loch\fs12
+92          60  TABULATE        TGENTECOLASCAJA4                 150              0      0}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+    }{\cf1\afs12\rtlch \ltrch\loch\fs12
+93          61  TABULATE        TGENTECOLASCAJA5                 150              0      0}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+    }{\cf1\afs12\rtlch \ltrch\loch\fs12
+94          62  TERMINATE                                        150              0      0}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+    }{\cf1\afs12\rtlch \ltrch\loch\fs12
+96          63  GENERATE        3600,0                             7              0      0}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+    }{\cf1\afs12\rtlch \ltrch\loch\fs12
+97          64  TERMINATE       1                                  7              0      0}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274\qc{\cf3\b\afs12\ab\rtlch \ltrch\loch\fs12
+}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274\qc{\cf3\b\afs12\ab\rtlch \ltrch\loch\fs12
+Facilities}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274\qc{\cf3\b\afs12\ab\rtlch \ltrch\loch\fs12
+}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf3\afs12\rtlch \ltrch\fs12
+ }{\cf3\afs12\rtlch \ltrch\loch\fs12
+FACILITY          ENTRIES    UTIL.  AVE_TIME  AVAILABLE   OWNER   PEND   INTER   RETRY   DELAY}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+              }{\cf1\afs12\rtlch \ltrch\loch\fs12
+1        183    0,657    90,519          1       0      0       0       0       0}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+              }{\cf1\afs12\rtlch \ltrch\loch\fs12
+2        136    0,509    94,250          1      43      0       0       0       0}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+              }{\cf1\afs12\rtlch \ltrch\loch\fs12
+3         95    0,342    90,832          1      42      0       0       0       0}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+              }{\cf1\afs12\rtlch \ltrch\loch\fs12
+4         42    0,140    83,762          1      45      0       0       0       0}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+              }{\cf1\afs12\rtlch \ltrch\loch\fs12
+5         10    0,034    85,300          1      44      0       0       0       0}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+          }{\cf1\afs12\rtlch \ltrch\loch\fs12
+ATENC        673    0,784    29,346          1      60      0       0       0      93}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274\qc{\cf3\b\afs12\ab\rtlch \ltrch\loch\fs12
+}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274\qc{\cf3\b\afs12\ab\rtlch \ltrch\loch\fs12
+Queues}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274\qc{\cf3\b\afs12\ab\rtlch \ltrch\loch\fs12
+}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf3\afs12\rtlch \ltrch\fs12
+ }{\cf3\afs12\rtlch \ltrch\loch\fs12
+QUEUE             MAX      CONT.  ENTRIES ENTRIES(0)  AVE.CONT.   AVE.TIME    AVE.(-0)   RETRY}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+              }{\cf1\afs12\rtlch \ltrch\loch\fs12
+1      1         0       183      151       0,070       9,683      55,375       0}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+              }{\cf1\afs12\rtlch \ltrch\loch\fs12
+2      1         0       136      124       0,024       4,493      50,917       0}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+              }{\cf1\afs12\rtlch \ltrch\loch\fs12
+3      1         0        95       90       0,009       2,326      44,200       0}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+              }{\cf1\afs12\rtlch \ltrch\loch\fs12
+4      1         0        42       42       0,000       0,000       0,000       0}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+              }{\cf1\afs12\rtlch \ltrch\loch\fs12
+5      1         0        10       10       0,000       0,000       0,000       0}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+          }{\cf1\afs12\rtlch \ltrch\loch\fs12
+ATENC     95        93       766       92      14,994     493,265     560,595       0}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+  }{\cf1\afs12\rtlch \ltrch\loch\fs12
+ATENCPROMVTAS      6         1       215      118       0,515      60,363     133,794       0}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+   }{\cf1\afs12\rtlch \ltrch\loch\fs12
+ATENCSERVTEC      9         5       270      112       1,407     131,326     224,418       0}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+          }{\cf1\afs12\rtlch \ltrch\loch\fs12
+CAJAS      3         0       466      417       0,103       5,588      53,143       0}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274\qc{\cf3\b\afs12\ab\rtlch \ltrch\loch\fs12
+}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274\qc{\cf3\b\afs12\ab\rtlch \ltrch\loch\fs12
+Storages}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274\qc{\cf3\b\afs12\ab\rtlch \ltrch\loch\fs12
+}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf3\afs12\rtlch \ltrch\fs12
+ }{\cf3\afs12\rtlch \ltrch\loch\fs12
+STORAGE           CAP.   REMAIN.   MIN.   MAX.  ENTRIES  AVL.   AVE.C.    UTIL.  RETRY   DELAY}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+  }{\cf1\afs12\rtlch \ltrch\loch\fs12
+ATENCPROMVTAS       6        0       0      6      214     1    3,938    0,656      0       1}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+   }{\cf1\afs12\rtlch \ltrch\loch\fs12
+ATENCSERVTEC       5        0       0      5      265     1    3,589    0,718      0       5}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274\qc{\cf3\b\afs12\ab\rtlch \ltrch\loch\fs12
+}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274\qc{\cf3\b\afs12\ab\rtlch \ltrch\loch\fs12
+Tables}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274\qc{\cf3\b\afs12\ab\rtlch \ltrch\loch\fs12
+}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf4\afs12\rtlch \ltrch\loch\fs12
+DISTTIPOS           TABLE            *TIPO,1,1,5}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf4\afs12\rtlch \ltrch\loch\fs12
+}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+               }{\cf1\afs12\rtlch \ltrch\loch\fs12
+MEDIA                         :          2,398}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+               }{\cf1\afs12\rtlch \ltrch\loch\fs12
+DESVIACION ESTANDAR           :          1,228}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+               }{\cf1\afs12\rtlch \ltrch\loch\fs12
+CANTIDAD EN RETRY             :              0}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\loch\fs12
+}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf3\afs12\rtlch \ltrch\fs12
+          }{\cf3\afs12\rtlch \ltrch\loch\fs12
+INTERVALO       FRECUENCIA           %     %ACUMULADO    %REMANENTE}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+         }{\cf1\afs12\rtlch \ltrch\loch\fs12
+0  -         1          262      34,204         34,204        65,796}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+         }{\cf1\afs12\rtlch \ltrch\loch\fs12
+2  -         2          160      20,888         55,091        44,909}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+         }{\cf1\afs12\rtlch \ltrch\loch\fs12
+3  -         3          121      15,796         70,888        29,112}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+         }{\cf1\afs12\rtlch \ltrch\loch\fs12
+4  -         4          223      29,112        100,000         0,000}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+            }{\cf1\afs12\rtlch \ltrch\loch\fs12
+Las frecuencias restantes (1) son todas cero.}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\loch\fs12
+}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+        }{\cf1\afs12\rtlch \ltrch\loch\fs12
+CANTIDAD DE VALORES TABULADOS :           766}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+        }{\cf1\afs12\rtlch \ltrch\loch\fs12
+VALOR MAXIMO TABULADO         :         4,000}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\loch\fs12
+}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf4\afs12\rtlch \ltrch\loch\fs12
+TGENTECOLASCAJA     TABLE            Q$CAJAS,1,1,20}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf4\afs12\rtlch \ltrch\loch\fs12
+}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+               }{\cf1\afs12\rtlch \ltrch\loch\fs12
+MEDIA                         :          0,133}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+               }{\cf1\afs12\rtlch \ltrch\loch\fs12
+DESVIACION ESTANDAR           :          0,444}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+               }{\cf1\afs12\rtlch \ltrch\loch\fs12
+CANTIDAD EN RETRY             :              0}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\loch\fs12
+}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf3\afs12\rtlch \ltrch\fs12
+          }{\cf3\afs12\rtlch \ltrch\loch\fs12
+INTERVALO       FRECUENCIA           %     %ACUMULADO    %REMANENTE}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+         }{\cf1\afs12\rtlch \ltrch\loch\fs12
+0  -         1          146      97,333         97,333         2,667}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+         }{\cf1\afs12\rtlch \ltrch\loch\fs12
+2  -         2            3       2,000         99,333         0,667}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+         }{\cf1\afs12\rtlch \ltrch\loch\fs12
+3  -         3            1       0,667        100,000         0,000}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+            }{\cf1\afs12\rtlch \ltrch\loch\fs12
+Las frecuencias restantes (17) son todas cero.}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\loch\fs12
+}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+        }{\cf1\afs12\rtlch \ltrch\loch\fs12
+CANTIDAD DE VALORES TABULADOS :           150}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+        }{\cf1\afs12\rtlch \ltrch\loch\fs12
+VALOR MAXIMO TABULADO         :         3,000}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\loch\fs12
+}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf4\afs12\rtlch \ltrch\loch\fs12
+TGENTECOLASCAJA1    TABLE            Q1,1,1,20}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf4\afs12\rtlch \ltrch\loch\fs12
+}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+               }{\cf1\afs12\rtlch \ltrch\loch\fs12
+MEDIA                         :          0,093}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+               }{\cf1\afs12\rtlch \ltrch\loch\fs12
+DESVIACION ESTANDAR           :          0,292}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+               }{\cf1\afs12\rtlch \ltrch\loch\fs12
+CANTIDAD EN RETRY             :              0}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\loch\fs12
+}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf3\afs12\rtlch \ltrch\fs12
+          }{\cf3\afs12\rtlch \ltrch\loch\fs12
+INTERVALO       FRECUENCIA           %     %ACUMULADO    %REMANENTE}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+         }{\cf1\afs12\rtlch \ltrch\loch\fs12
+0  -         1          150     100,000        100,000         0,000}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+            }{\cf1\afs12\rtlch \ltrch\loch\fs12
+Las frecuencias restantes (19) son todas cero.}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\loch\fs12
+}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+        }{\cf1\afs12\rtlch \ltrch\loch\fs12
+CANTIDAD DE VALORES TABULADOS :           150}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+        }{\cf1\afs12\rtlch \ltrch\loch\fs12
+VALOR MAXIMO TABULADO         :         1,000}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\loch\fs12
+}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf4\afs12\rtlch \ltrch\loch\fs12
+TGENTECOLASCAJA2    TABLE            Q2,1,1,20}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf4\afs12\rtlch \ltrch\loch\fs12
+}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+               }{\cf1\afs12\rtlch \ltrch\loch\fs12
+MEDIA                         :          0,027}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+               }{\cf1\afs12\rtlch \ltrch\loch\fs12
+DESVIACION ESTANDAR           :          0,162}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+               }{\cf1\afs12\rtlch \ltrch\loch\fs12
+CANTIDAD EN RETRY             :              0}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\loch\fs12
+}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf3\afs12\rtlch \ltrch\fs12
+          }{\cf3\afs12\rtlch \ltrch\loch\fs12
+INTERVALO       FRECUENCIA           %     %ACUMULADO    %REMANENTE}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+         }{\cf1\afs12\rtlch \ltrch\loch\fs12
+0  -         1          150     100,000        100,000         0,000}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+            }{\cf1\afs12\rtlch \ltrch\loch\fs12
+Las frecuencias restantes (19) son todas cero.}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\loch\fs12
+}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+        }{\cf1\afs12\rtlch \ltrch\loch\fs12
+CANTIDAD DE VALORES TABULADOS :           150}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+        }{\cf1\afs12\rtlch \ltrch\loch\fs12
+VALOR MAXIMO TABULADO         :         1,000}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\loch\fs12
+}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf4\afs12\rtlch \ltrch\loch\fs12
+TGENTECOLASCAJA3    TABLE            Q3,1,1,20}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf4\afs12\rtlch \ltrch\loch\fs12
+}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+               }{\cf1\afs12\rtlch \ltrch\loch\fs12
+MEDIA                         :          0,013}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+               }{\cf1\afs12\rtlch \ltrch\loch\fs12
+DESVIACION ESTANDAR           :          0,115}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+               }{\cf1\afs12\rtlch \ltrch\loch\fs12
+CANTIDAD EN RETRY             :              0}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\loch\fs12
+}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf3\afs12\rtlch \ltrch\fs12
+          }{\cf3\afs12\rtlch \ltrch\loch\fs12
+INTERVALO       FRECUENCIA           %     %ACUMULADO    %REMANENTE}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+         }{\cf1\afs12\rtlch \ltrch\loch\fs12
+0  -         1          150     100,000        100,000         0,000}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+            }{\cf1\afs12\rtlch \ltrch\loch\fs12
+Las frecuencias restantes (19) son todas cero.}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\loch\fs12
+}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+        }{\cf1\afs12\rtlch \ltrch\loch\fs12
+CANTIDAD DE VALORES TABULADOS :           150}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+        }{\cf1\afs12\rtlch \ltrch\loch\fs12
+VALOR MAXIMO TABULADO         :         1,000}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\loch\fs12
+}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf4\afs12\rtlch \ltrch\loch\fs12
+TGENTECOLASCAJA4    TABLE            Q4,1,1,20}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf4\afs12\rtlch \ltrch\loch\fs12
+}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+               }{\cf1\afs12\rtlch \ltrch\loch\fs12
+MEDIA                         :          0,000}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+               }{\cf1\afs12\rtlch \ltrch\loch\fs12
+DESVIACION ESTANDAR           :          0,000}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+               }{\cf1\afs12\rtlch \ltrch\loch\fs12
+CANTIDAD EN RETRY             :              0}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\loch\fs12
+}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf3\afs12\rtlch \ltrch\fs12
+          }{\cf3\afs12\rtlch \ltrch\loch\fs12
+INTERVALO       FRECUENCIA           %     %ACUMULADO    %REMANENTE}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+         }{\cf1\afs12\rtlch \ltrch\loch\fs12
+0  -         1          150     100,000        100,000         0,000}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+            }{\cf1\afs12\rtlch \ltrch\loch\fs12
+Las frecuencias restantes (19) son todas cero.}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\loch\fs12
+}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+        }{\cf1\afs12\rtlch \ltrch\loch\fs12
+CANTIDAD DE VALORES TABULADOS :           150}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+        }{\cf1\afs12\rtlch \ltrch\loch\fs12
+VALOR MAXIMO TABULADO         :         0,000}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\loch\fs12
+}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf4\afs12\rtlch \ltrch\loch\fs12
+TGENTECOLASCAJA5    TABLE            Q5,1,1,20}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf4\afs12\rtlch \ltrch\loch\fs12
+}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+               }{\cf1\afs12\rtlch \ltrch\loch\fs12
+MEDIA                         :          0,000}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+               }{\cf1\afs12\rtlch \ltrch\loch\fs12
+DESVIACION ESTANDAR           :          0,000}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+               }{\cf1\afs12\rtlch \ltrch\loch\fs12
+CANTIDAD EN RETRY             :              0}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\loch\fs12
+}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf3\afs12\rtlch \ltrch\fs12
+          }{\cf3\afs12\rtlch \ltrch\loch\fs12
+INTERVALO       FRECUENCIA           %     %ACUMULADO    %REMANENTE}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+         }{\cf1\afs12\rtlch \ltrch\loch\fs12
+0  -         1          150     100,000        100,000         0,000}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+            }{\cf1\afs12\rtlch \ltrch\loch\fs12
+Las frecuencias restantes (19) son todas cero.}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\loch\fs12
+}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+        }{\cf1\afs12\rtlch \ltrch\loch\fs12
+CANTIDAD DE VALORES TABULADOS :           150}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+        }{\cf1\afs12\rtlch \ltrch\loch\fs12
+VALOR MAXIMO TABULADO         :         0,000}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\loch\fs12
+}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf4\afs12\rtlch \ltrch\loch\fs12
+TTIEMPOSIST         TABLE            M1,180,180,30}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf4\afs12\rtlch \ltrch\loch\fs12
+}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+               }{\cf1\afs12\rtlch \ltrch\loch\fs12
+MEDIA                         :        944,481}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+               }{\cf1\afs12\rtlch \ltrch\loch\fs12
+DESVIACION ESTANDAR           :        571,854}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+               }{\cf1\afs12\rtlch \ltrch\loch\fs12
+CANTIDAD EN RETRY             :              0}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\loch\fs12
+}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf3\afs12\rtlch \ltrch\fs12
+          }{\cf3\afs12\rtlch \ltrch\loch\fs12
+INTERVALO       FRECUENCIA           %     %ACUMULADO    %REMANENTE}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+         }{\cf1\afs12\rtlch \ltrch\loch\fs12
+0  -       180           84      12,963         12,963        87,037}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+       }{\cf1\afs12\rtlch \ltrch\loch\fs12
+181  -       360           13       2,006         14,969        85,031}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+       }{\cf1\afs12\rtlch \ltrch\loch\fs12
+361  -       540           44       6,790         21,759        78,241}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+       }{\cf1\afs12\rtlch \ltrch\loch\fs12
+541  -       720          131      20,216         41,975        58,025}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+       }{\cf1\afs12\rtlch \ltrch\loch\fs12
+721  -       900           70      10,802         52,778        47,222}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+       }{\cf1\afs12\rtlch \ltrch\loch\fs12
+901  -      1080           60       9,259         62,037        37,963}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+      }{\cf1\afs12\rtlch \ltrch\loch\fs12
+1081  -      1260           52       8,025         70,062        29,938}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+      }{\cf1\afs12\rtlch \ltrch\loch\fs12
+1261  -      1440           49       7,562         77,623        22,377}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+      }{\cf1\afs12\rtlch \ltrch\loch\fs12
+1441  -      1620           70      10,802         88,426        11,574}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+      }{\cf1\afs12\rtlch \ltrch\loch\fs12
+1621  -      1800           31       4,784         93,210         6,790}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+      }{\cf1\afs12\rtlch \ltrch\loch\fs12
+1801  -      1980           15       2,315         95,525         4,475}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+      }{\cf1\afs12\rtlch \ltrch\loch\fs12
+1981  -      2160            9       1,389         96,914         3,086}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+      }{\cf1\afs12\rtlch \ltrch\loch\fs12
+2161  -      2340           11       1,698         98,611         1,389}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+      }{\cf1\afs12\rtlch \ltrch\loch\fs12
+2341  -      2520            3       0,463         99,074         0,926}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+      }{\cf1\afs12\rtlch \ltrch\loch\fs12
+2521  -      2700            6       0,926        100,000         0,000}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+            }{\cf1\afs12\rtlch \ltrch\loch\fs12
+Las frecuencias restantes (15) son todas cero.}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\loch\fs12
+}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+        }{\cf1\afs12\rtlch \ltrch\loch\fs12
+CANTIDAD DE VALORES TABULADOS :           648}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+        }{\cf1\afs12\rtlch \ltrch\loch\fs12
+VALOR MAXIMO TABULADO         :      2657,000}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\loch\fs12
+}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274\qc{\cf3\b\afs12\ab\rtlch \ltrch\loch\fs12
+}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274\qc{\cf3\b\afs12\ab\rtlch \ltrch\loch\fs12
+QTables}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274\qc{\cf3\b\afs12\ab\rtlch \ltrch\loch\fs12
+}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf4\afs12\rtlch \ltrch\loch\fs12
+TTIEMPOCOLAATENC    TABLE            ATENC,5,60,30}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf4\afs12\rtlch \ltrch\loch\fs12
+}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+               }{\cf1\afs12\rtlch \ltrch\loch\fs12
+MEDIA                         :        439,201}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+               }{\cf1\afs12\rtlch \ltrch\loch\fs12
+DESVIACION ESTANDAR           :        449,740}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+               }{\cf1\afs12\rtlch \ltrch\loch\fs12
+CANTIDAD EN RETRY             :              0}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\loch\fs12
+}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf3\afs12\rtlch \ltrch\fs12
+          }{\cf3\afs12\rtlch \ltrch\loch\fs12
+INTERVALO       FRECUENCIA           %     %ACUMULADO    %REMANENTE}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+         }{\cf1\afs12\rtlch \ltrch\loch\fs12
+0  -         5          103      15,305         15,305        84,695}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+         }{\cf1\afs12\rtlch \ltrch\loch\fs12
+6  -        65          122      18,128         33,432        66,568}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+        }{\cf1\afs12\rtlch \ltrch\loch\fs12
+66  -       125           56       8,321         41,753        58,247}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+       }{\cf1\afs12\rtlch \ltrch\loch\fs12
+126  -       185           23       3,418         45,171        54,829}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+       }{\cf1\afs12\rtlch \ltrch\loch\fs12
+186  -       245           12       1,783         46,954        53,046}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+       }{\cf1\afs12\rtlch \ltrch\loch\fs12
+246  -       305            8       1,189         48,143        51,857}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+       }{\cf1\afs12\rtlch \ltrch\loch\fs12
+306  -       365            9       1,337         49,480        50,520}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+       }{\cf1\afs12\rtlch \ltrch\loch\fs12
+366  -       425           16       2,377         51,857        48,143}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+       }{\cf1\afs12\rtlch \ltrch\loch\fs12
+426  -       485           31       4,606         56,464        43,536}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+       }{\cf1\afs12\rtlch \ltrch\loch\fs12
+486  -       545           32       4,755         61,218        38,782}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+       }{\cf1\afs12\rtlch \ltrch\loch\fs12
+546  -       605           45       6,686         67,905        32,095}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+       }{\cf1\afs12\rtlch \ltrch\loch\fs12
+606  -       665           53       7,875         75,780        24,220}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+       }{\cf1\afs12\rtlch \ltrch\loch\fs12
+666  -       725           19       2,823         78,603        21,397}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+       }{\cf1\afs12\rtlch \ltrch\loch\fs12
+726  -       785            9       1,337         79,941        20,059}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+       }{\cf1\afs12\rtlch \ltrch\loch\fs12
+786  -       845            3       0,446         80,386        19,614}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+       }{\cf1\afs12\rtlch \ltrch\loch\fs12
+846  -       905           20       2,972         83,358        16,642}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+       }{\cf1\afs12\rtlch \ltrch\loch\fs12
+906  -       965           22       3,269         86,627        13,373}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+       }{\cf1\afs12\rtlch \ltrch\loch\fs12
+966  -      1025            5       0,743         87,370        12,630}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+      }{\cf1\afs12\rtlch \ltrch\loch\fs12
+1026  -      1085            5       0,743         88,113        11,887}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+      }{\cf1\afs12\rtlch \ltrch\loch\fs12
+1086  -      1145           10       1,486         89,599        10,401}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+      }{\cf1\afs12\rtlch \ltrch\loch\fs12
+1146  -      1205            4       0,594         90,193         9,807}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+      }{\cf1\afs12\rtlch \ltrch\loch\fs12
+1206  -      1265            4       0,594         90,788         9,212}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+      }{\cf1\afs12\rtlch \ltrch\loch\fs12
+1266  -      1325            4       0,594         91,382         8,618}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+      }{\cf1\afs12\rtlch \ltrch\loch\fs12
+1326  -      1385           18       2,675         94,056         5,944}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+      }{\cf1\afs12\rtlch \ltrch\loch\fs12
+1386  -      1445           30       4,458         98,514         1,486}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+      }{\cf1\afs12\rtlch \ltrch\loch\fs12
+1446  -      1505            6       0,892         99,406         0,594}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+      }{\cf1\afs12\rtlch \ltrch\loch\fs12
+1506  -      1565            2       0,297         99,703         0,297}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+      }{\cf1\afs12\rtlch \ltrch\loch\fs12
+1566  -      1625            2       0,297        100,000         0,000}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+            }{\cf1\afs12\rtlch \ltrch\loch\fs12
+Las frecuencias restantes (2) son todas cero.}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\loch\fs12
+}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+        }{\cf1\afs12\rtlch \ltrch\loch\fs12
+CANTIDAD DE VALORES TABULADOS :           673}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+        }{\cf1\afs12\rtlch \ltrch\loch\fs12
+VALOR MAXIMO TABULADO         :      1586,000}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\loch\fs12
+}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274\qc{\cf3\b\afs12\ab\rtlch \ltrch\loch\fs12
+}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274\qc{\cf3\b\afs12\ab\rtlch \ltrch\loch\fs12
+Savevalues}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274\qc{\cf3\b\afs12\ab\rtlch \ltrch\loch\fs12
+}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf3\afs12\rtlch \ltrch\fs12
+ }{\cf3\afs12\rtlch \ltrch\loch\fs12
+SAVEVALUE               VALUE      RETRY}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+ }{\cf1\afs12\rtlch \ltrch\loch\fs12
+CANTCAJAS                   5          0}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+      }{\cf1\afs12\rtlch \ltrch\loch\fs12
+MED1                  40          0}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+      }{\cf1\afs12\rtlch \ltrch\loch\fs12
+MED2                  45          0}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\loch\fs12
+}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274\qc{\cf3\b\afs12\ab\rtlch \ltrch\loch\fs12
+}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274\qc{\cf3\b\afs12\ab\rtlch \ltrch\loch\fs12
+Cadena de eventos corrientes (CEC)}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274\qc{\cf3\b\afs12\ab\rtlch \ltrch\loch\fs12
+}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf3\afs12\rtlch \ltrch\fs12
+ }{\cf3\afs12\rtlch \ltrch\loch\fs12
+CEC_XACT_NUMBER    PRI          M1       CURRENT       NEXT        PARAMETER        VALUE}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+             }{\cf1\afs12\rtlch \ltrch\loch\fs12
+124      0           0             0         55}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\loch\fs12
+}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274\qc{\cf3\b\afs12\ab\rtlch \ltrch\loch\fs12
+}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274\qc{\cf3\b\afs12\ab\rtlch \ltrch\loch\fs12
+Cadena de eventos futuros (FEC)}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274\qc{\cf3\b\afs12\ab\rtlch \ltrch\loch\fs12
+}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf3\afs12\rtlch \ltrch\fs12
+ }{\cf3\afs12\rtlch \ltrch\loch\fs12
+FEC_XACT_NUMBER    PRI         BDT       CURRENT       NEXT        PARAMETER        VALUE}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+              }{\cf1\afs12\rtlch \ltrch\loch\fs12
+27      0       25201            30         31             TIPO            1}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+                                                                         }{\cf1\afs12\rtlch \ltrch\loch\fs12
+DESV          120}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+              }{\cf1\afs12\rtlch \ltrch\loch\fs12
+29      0       25207            30         31             TIPO            3}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+                                                                         }{\cf1\afs12\rtlch \ltrch\loch\fs12
+DESV          180}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+              }{\cf1\afs12\rtlch \ltrch\loch\fs12
+45      0       25218            39         40             TIPO            1}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+                                                                         }{\cf1\afs12\rtlch \ltrch\loch\fs12
+DESV          120}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+                                                                         }{\cf1\afs12\rtlch \ltrch\loch\fs12
+CAJA            4}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+             }{\cf1\afs12\rtlch \ltrch\loch\fs12
+123      0       25220             0          3}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+              }{\cf1\afs12\rtlch \ltrch\loch\fs12
+60      0       25224            12         13             TIPO            2}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+                                                                         }{\cf1\afs12\rtlch \ltrch\loch\fs12
+DESV          120}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+              }{\cf1\afs12\rtlch \ltrch\loch\fs12
+56      0       25237            27         28             TIPO            4}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+                                                                         }{\cf1\afs12\rtlch \ltrch\loch\fs12
+DESV          240}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+              }{\cf1\afs12\rtlch \ltrch\loch\fs12
+43      0       25244            39         40             TIPO            1}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+                                                                         }{\cf1\afs12\rtlch \ltrch\loch\fs12
+DESV          120}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+                                                                         }{\cf1\afs12\rtlch \ltrch\loch\fs12
+CAJA            2}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+              }{\cf1\afs12\rtlch \ltrch\loch\fs12
+42      0       25253            39         40             TIPO            4}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+                                                                         }{\cf1\afs12\rtlch \ltrch\loch\fs12
+DESV          240}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+                                                                         }{\cf1\afs12\rtlch \ltrch\loch\fs12
+CAJA            3}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+              }{\cf1\afs12\rtlch \ltrch\loch\fs12
+44      0       25264            39         40             TIPO            1}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+                                                                         }{\cf1\afs12\rtlch \ltrch\loch\fs12
+DESV          120}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+                                                                         }{\cf1\afs12\rtlch \ltrch\loch\fs12
+CAJA            5}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+              }{\cf1\afs12\rtlch \ltrch\loch\fs12
+80      0       25266             0          1}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+              }{\cf1\afs12\rtlch \ltrch\loch\fs12
+72      0       25273            23         24             TIPO            4}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+                                                                         }{\cf1\afs12\rtlch \ltrch\loch\fs12
+DESV          240}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+              }{\cf1\afs12\rtlch \ltrch\loch\fs12
+68      0       25324            27         28             TIPO            4}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+                                                                         }{\cf1\afs12\rtlch \ltrch\loch\fs12
+DESV          240}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+              }{\cf1\afs12\rtlch \ltrch\loch\fs12
+24      0       25397            20         21             TIPO            1}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+                                                                         }{\cf1\afs12\rtlch \ltrch\loch\fs12
+DESV          120}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+              }{\cf1\afs12\rtlch \ltrch\loch\fs12
+30      0       25417            20         21             TIPO            2}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+                                                                         }{\cf1\afs12\rtlch \ltrch\loch\fs12
+DESV          120}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+              }{\cf1\afs12\rtlch \ltrch\loch\fs12
+35      0       25418            27         28             TIPO            3}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+                                                                         }{\cf1\afs12\rtlch \ltrch\loch\fs12
+DESV          180}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+              }{\cf1\afs12\rtlch \ltrch\loch\fs12
+17      0       25456            20         21             TIPO            2}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+                                                                         }{\cf1\afs12\rtlch \ltrch\loch\fs12
+DESV          120}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+              }{\cf1\afs12\rtlch \ltrch\loch\fs12
+54      0       25460            27         28             TIPO            3}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+                                                                         }{\cf1\afs12\rtlch \ltrch\loch\fs12
+DESV          180}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+              }{\cf1\afs12\rtlch \ltrch\loch\fs12
+23      0       25480            20         21             TIPO            1}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+                                                                         }{\cf1\afs12\rtlch \ltrch\loch\fs12
+DESV          120}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+              }{\cf1\afs12\rtlch \ltrch\loch\fs12
+37      0       25485            20         21             TIPO            2}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+                                                                         }{\cf1\afs12\rtlch \ltrch\loch\fs12
+DESV          120}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+              }{\cf1\afs12\rtlch \ltrch\loch\fs12
+22      0       25540            27         28             TIPO            4}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+                                                                         }{\cf1\afs12\rtlch \ltrch\loch\fs12
+DESV          240}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+              }{\cf1\afs12\rtlch \ltrch\loch\fs12
+38      0       25797            27         28             TIPO            4}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+                                                                         }{\cf1\afs12\rtlch \ltrch\loch\fs12
+DESV          240}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\fs12
+              }{\cf1\afs12\rtlch \ltrch\loch\fs12
+49      0       28800             0         63}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\hich\af3\langfe2052\dbch\af3\afs24\lang1081\loch\f3\fs24\lang11274{\cf1\afs12\rtlch \ltrch\loch\fs12
+}
 \par }
- 
